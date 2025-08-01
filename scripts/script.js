@@ -92,7 +92,7 @@ function gameManager() {
   };
   const reset = () => {
     isGameOver = false;
-    board.reset;
+    board.reset();
   };
   return { doPlayerTurn, reset };
 }

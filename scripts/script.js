@@ -12,10 +12,17 @@ function initializeBoard() {
     if (boardFreeIndex > -1) {
       boardFree.splice(boardFree.indexOf(index), 1);
     }
+
+    let cell = boardDisplay.children[index];
+    if (cell != undefined) {
+      cell.classList.add(value == 1 ? "player" : "computer");
+    }
   };
   reset = () => {
     for (let l = 0; l < board.length; l++) {
       board[l] = 0;
+      cell.classList.remove("player");
+      cell.classList.remove("computer");
     }
 
     boardFree = [0, 1, 2, 3, 4, 5, 6, 7, 8];

@@ -1,10 +1,27 @@
+const boardDisplay = document.querySelector("#board");
+
 function initializeBoard() {
   const board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+  let boardFree = [0, 1, 2, 3, 4, 5, 6, 7, 8];
   getBoardCell = (index) => {
-    board[index];
+    return board[index];
   };
   setBoardCell = (index, value) => {
     board[index] = value;
+    boardFreeIndex = boardFree.indexOf(index);
+    if (boardFreeIndex > -1) {
+      boardFree.splice(boardFree.indexOf(index), 1);
+    }
+  };
+  reset = () => {
+    for (let l = 0; l < board.length; l++) {
+      board[l] = 0;
+    }
+
+    boardFree = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+  };
+  getFreeCells = () => {
+    return boardFree;
   };
   judge = () => {
     for (let l = 0; l < 3; l++) {
@@ -38,18 +55,49 @@ function initializeBoard() {
     return 0;
   };
 
-  return { getBoardCell, setBoardCell, judge };
+  return { getBoardCell, setBoardCell, reset, getFreeCells, judge };
 }
 
-gameboard = initializeBoard();
+function gameManager() {
+  const board = initializeBoard();
 
-gameManager = (function () {
-  const doPlayerTurn = () => {};
-  const doComputerTurn = () => {};
-  const playGame = () => {};
-  return { playGame };
-})();
+  let isGameOver = false;
+  const doPlayerTurn = (index) => {
+    if (isGameOver || board.getBoardCell(index) != 0) {
+      return;
+    }
 
-function createPlayer() {}
+    board.setBoardCell(index, 1);
+    if (board.getFreeCells().length > 0) {
+      let computerMove =
+        board.getFreeCells()[
+          Math.floor(Math.random() * board.getFreeCells().length)
+        ];
+      board.setBoardCell(computerMove, 2);
+    } else {
+      isGameOver = true;
+    }
 
-console.log(gameboard.judge());
+    let judgement = board.judge();
+    if (judgement > 0 || board.getFreeCells().length < 1) {
+      isGameOver = true;
+    }
+  };
+  const reset = () => {
+    isGameOver = false;
+    board.reset;
+  };
+  return { doPlayerTurn, reset };
+}
+
+game = gameManager();
+
+boardDisplay.addEventListener("click", (e) => {
+  let cell = e.target.id;
+
+  if (isNaN(cell)) {
+    return;
+  }
+
+  game.doPlayerTurn(parseInt(cell));
+});

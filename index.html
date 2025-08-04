@@ -34,12 +34,23 @@
         <dialog open>
             <div id="form-container">
                 <form action="">
-                    <label for="name">Tell us your name!</label>
+                    <label for="player1">Tell us your name!</label>
                     <input
                         id="name-field"
                         type="field"
-                        name="name"
+                        name="player1"
                         maxlength="10"
+                        placeholder="Player 1"
+                        autofocus
+                        required
+                    />
+                    <label for="player2">...along with your friend!</label>
+                    <input
+                        id="name-field"
+                        type="field"
+                        name="player2"
+                        maxlength="10"
+                        placeholder="Player 2"
                         autofocus
                         required
                     />

@@ -114,6 +114,7 @@ function initializeBoard() {
 function gameManager() {
   const board = initializeBoard();
   let player1 = "player1";
+  let turn = 1;
 
   let isGameOver = false;
 
@@ -130,18 +131,9 @@ function gameManager() {
       }
     }
 
-    board.setBoardCell(index, 1);
+    board.setBoardCell(index, turn);
     let judgement = board.judge();
-
-    if (board.getFreeCells().length > 0 && judgement == 0) {
-      let computerMove =
-        board.getFreeCells()[
-          Math.floor(Math.random() * board.getFreeCells().length)
-        ];
-      board.setBoardCell(computerMove, 2);
-    } else {
-      isGameOver = true;
-    }
+    turn = turn == 1 ? 2 : 1;
 
     if (judgement == 0) {
       judgement = board.judge();
@@ -169,7 +161,8 @@ function gameManager() {
         }
       } else {
         resultsWinner.classList.add("display");
-        resultsWinner.textContent = judgement == 1 ? `${player1}` : "COMPUTER";
+        resultsWinner.textContent =
+          judgement == 1 ? `${player1}` : `${player2}`;
 
         if (consecutiveWins >= 3) {
           resultsDesc.textContent = "ABSOLUTE WINNER";
@@ -202,8 +195,12 @@ function gameManager() {
     restartButton.className = "";
   };
 
-  const setPlayerName = (name) => {
-    player1 = name;
+  const setPlayerName = (name, player) => {
+    if (player == 1) {
+      player1 = name;
+    } else {
+      player2 = name;
+    }
   };
 
   return { doPlayerTurn, reset, setPlayerName };
@@ -218,7 +215,8 @@ nameSubmitButton.addEventListener("click", (e) => {
 
   const newForm = new FormData(form);
 
-  game.setPlayerName(newForm.get("name"));
+  game.setPlayerName(newForm.get("player1"), 1);
+  game.setPlayerName(newForm.get("player2"), 2);
 
   dialog.close();
   form.reset();

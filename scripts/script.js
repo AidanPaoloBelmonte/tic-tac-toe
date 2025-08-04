@@ -9,9 +9,11 @@ const nameSubmitButton = document.querySelector("#name-submit");
 function initializeBoard() {
   const board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
   let boardFree = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+
   getBoardCell = (index) => {
     return board[index];
   };
+
   setBoardCell = (index, value) => {
     board[index] = value;
     boardFreeIndex = boardFree.indexOf(index);
@@ -24,6 +26,7 @@ function initializeBoard() {
       cell.classList.add(value == 1 ? "player" : "computer");
     }
   };
+
   reset = () => {
     for (let l = 0; l < board.length; l++) {
       board[l] = 0;
@@ -33,9 +36,11 @@ function initializeBoard() {
 
     boardFree = [0, 1, 2, 3, 4, 5, 6, 7, 8];
   };
+
   getFreeCells = () => {
     return boardFree;
   };
+
   judge = () => {
     let winner = 0;
     const winning_cells = [];
@@ -112,9 +117,17 @@ function gameManager() {
 
   let isGameOver = false;
 
+  let previousWinner = -1;
+  let consecutiveWins = 0;
+
   const doPlayerTurn = (index) => {
     if (isGameOver || board.getBoardCell(index) != 0) {
-      return;
+      if (isGameOver && consecutiveWins < 3) {
+        reset();
+        return;
+      } else {
+        return;
+      }
     }
 
     board.setBoardCell(index, 1);
@@ -137,19 +150,42 @@ function gameManager() {
     if (judgement > 0 || board.getFreeCells().length < 1) {
       isGameOver = true;
 
-      if (judgement == 0) {
-        resultsWinner.textContent = "TIE!";
-        resultsWinner.classList.add("tie");
-        resultsWinner.classList.add("display");
+      if (previousWinner != judgement) {
+        consecutiveWins = 1;
+        previousWinner = judgement;
       } else {
-        resultsDesc.textContent = "WINNER!";
-        resultsWinner.textContent = judgement == 1 ? `${player1}` : "COMPUTER";
+        consecutiveWins++;
+      }
+
+      if (judgement == 0) {
         resultsWinner.classList.add("display");
+        resultsWinner.classList.add("tie");
+
+        if (consecutiveWins >= 3) {
+          resultsWinner.textContent = "COMPLETE TIE";
+          resultsWinner.classList.add("definitive");
+        } else {
+          resultsWinner.textContent = "TIE!";
+        }
+      } else {
+        resultsWinner.classList.add("display");
+        resultsWinner.textContent = judgement == 1 ? `${player1}` : "COMPUTER";
+
+        if (consecutiveWins >= 3) {
+          resultsDesc.textContent = "ABSOLUTE WINNER";
+          resultsWinner.classList.add("definitive");
+        } else {
+          resultsDesc.textContent = "WINNER!";
+        }
+      }
+
+      if (consecutiveWins >= 3) {
+        restartButton.classList.add("alert");
       }
     }
   };
 
-  const reset = () => {
+  const reset = (full = false) => {
     isGameOver = false;
     board.reset();
 
@@ -157,6 +193,13 @@ function gameManager() {
     resultsDesc.className = "";
     resultsWinner.textContent = "";
     resultsWinner.className = "";
+
+    if (full) {
+      previousWinner = -1;
+      consecutiveWins = 0;
+    }
+
+    restartButton.className = "";
   };
 
   const setPlayerName = (name) => {
@@ -194,5 +237,5 @@ boardDisplay.addEventListener("click", (e) => {
 });
 
 restart.addEventListener("click", (e) => {
-  game.reset();
+  game.reset(true);
 });

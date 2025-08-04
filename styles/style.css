@@ -40,13 +40,59 @@ body {
 
     flex: 0 95vh;
     aspect-ratio: 1 / 1;
-    transform: rotate(4deg);
+    transform: rotate(2deg);
 
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
+
+    --board-border: 8px dotted gainsboro;
 }
 
 .cell {
     text-align: center;
+}
+
+.player {
+    background-image: url("../images/circle-outline.svg");
+}
+
+.computer {
+    background-image: url("../images/alpha-x.svg");
+}
+
+#_0 {
+    border-right: var(--board-border);
+    border-bottom: var(--board-border);
+}
+
+#_1 {
+    border-bottom: var(--board-border);
+}
+
+#_2 {
+    border-left: var(--board-border);
+    border-bottom: var(--board-border);
+}
+
+#_3 {
+    border-right: var(--board-border);
+    border-bottom: var(--board-border);
+}
+
+#_4 {
+    border-bottom: var(--board-border);
+}
+
+#_5 {
+    border-left: var(--board-border);
+    border-bottom: var(--board-border);
+}
+
+#_6 {
+    border-right: var(--board-border);
+}
+
+#_8 {
+    border-left: var(--board-border);
 }

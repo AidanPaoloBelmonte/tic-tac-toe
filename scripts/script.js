@@ -100,7 +100,7 @@ function gameManager() {
 game = gameManager();
 
 boardDisplay.addEventListener("click", (e) => {
-  let cell = e.target.id;
+  let cell = parseInt(e.target.id.replace("_", ""));
 
   if (isNaN(cell)) {
     return;

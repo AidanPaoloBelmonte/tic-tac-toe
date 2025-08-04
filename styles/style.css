@@ -106,3 +106,27 @@ body {
 #_8 {
     border-left: var(--board-border);
 }
+
+#restart {
+    height: 48px;
+    border-radius: 50%;
+    padding: 6px;
+    margin: 24px;
+
+    position: fixed;
+    right: 0;
+    bottom: 0;
+
+    box-shadow: 0px 3px 5px gray;
+}
+
+#restart:hover {
+    background-color: gainsboro;
+    transition: 50ms;
+}
+
+#restart:active {
+    margin-bottom: 20px;
+
+    box-shadow: 0px 1px 3px gray;
+}

@@ -1,4 +1,5 @@
 const boardDisplay = document.querySelector("#board");
+const restartButton = document.querySelector("#restart");
 
 function initializeBoard() {
   const board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -21,7 +22,8 @@ function initializeBoard() {
   reset = () => {
     for (let l = 0; l < board.length; l++) {
       board[l] = 0;
-      cell.classList.replace("cell");
+      boardDisplay.children[l].className = "";
+      boardDisplay.children[l].classList.add("cell");
     }
 
     boardFree = [0, 1, 2, 3, 4, 5, 6, 7, 8];
@@ -140,4 +142,8 @@ boardDisplay.addEventListener("click", (e) => {
   }
 
   game.doPlayerTurn(parseInt(cell));
+});
+
+restart.addEventListener("click", (e) => {
+  game.reset();
 });

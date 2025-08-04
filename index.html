@@ -10,6 +10,12 @@
         <title>Tic Tac Toe</title>
     </head>
     <body>
+        <div id="results">
+            <p id="desc"></p>
+            <p id="winner"></p>
+        </div>
+        <input id="restart" type="image" src="./images/restart.svg" />
+
         <div id="header">TICtacTOE</div>
         <div id="content">
             <div id="board">
@@ -25,6 +31,20 @@
             </div>
         </div>
 
-        <input id="restart" type="image" src="./images/restart.svg" />
+        <dialog open>
+            <div id="form-container">
+                <form action="">
+                    <label for="name">Tell us your name!</label>
+                    <input
+                        id="name-field"
+                        type="field"
+                        name="name"
+                        maxlength="10"
+                        required
+                    />
+                    <button id="name-submit" type="submit">Play!</button>
+                </form>
+            </div>
+        </dialog>
     </body>
 </html>

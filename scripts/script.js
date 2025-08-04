@@ -1,5 +1,10 @@
 const boardDisplay = document.querySelector("#board");
+const resultsDesc = document.querySelector("#desc");
+const resultsWinner = document.querySelector("#winner");
 const restartButton = document.querySelector("#restart");
+const dialog = document.querySelector("dialog");
+const form = document.querySelector("form");
+const nameSubmitButton = document.querySelector("#name-submit");
 
 function initializeBoard() {
   const board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -47,6 +52,8 @@ function initializeBoard() {
         winning_cells.push(l * 3 + 2);
 
         winner = board[l * 3];
+
+        break;
       }
       // Vertical Checks
       else if (
@@ -59,6 +66,8 @@ function initializeBoard() {
         winning_cells.push(l + 6);
 
         winner = board[l];
+
+        break;
       }
       // Diagonal Checks
       else if (
@@ -72,6 +81,8 @@ function initializeBoard() {
         winning_cells.push(8 + -l * 2);
 
         winner = board[4];
+
+        break;
       }
     }
 
@@ -97,8 +108,10 @@ function initializeBoard() {
 
 function gameManager() {
   const board = initializeBoard();
+  let player1 = "player1";
 
   let isGameOver = false;
+
   const doPlayerTurn = (index) => {
     if (isGameOver || board.getBoardCell(index) != 0) {
       return;
@@ -123,16 +136,52 @@ function gameManager() {
 
     if (judgement > 0 || board.getFreeCells().length < 1) {
       isGameOver = true;
+
+      if (judgement == 0) {
+        resultsWinner.textContent = "TIE!";
+        resultsWinner.classList.add("tie");
+        resultsWinner.classList.add("display");
+      } else {
+        resultsDesc.textContent = "WINNER!";
+        resultsWinner.textContent = judgement == 1 ? `${player1}` : "COMPUTER";
+        resultsWinner.classList.add("display");
+      }
     }
   };
+
   const reset = () => {
     isGameOver = false;
     board.reset();
+
+    resultsDesc.textContent = "";
+    resultsDesc.className = "";
+    resultsWinner.textContent = "";
+    resultsWinner.className = "";
   };
-  return { doPlayerTurn, reset };
+
+  const setPlayerName = (name) => {
+    player1 = name;
+  };
+
+  return { doPlayerTurn, reset, setPlayerName };
 }
 
 game = gameManager();
+
+nameSubmitButton.addEventListener("click", (e) => {
+  if (!form.reportValidity()) {
+    return;
+  }
+
+  const newForm = new FormData(form);
+
+  game.setPlayerName(newForm.get("name"));
+
+  dialog.close();
+  form.reset();
+
+  e.preventDefault();
+});
 
 boardDisplay.addEventListener("click", (e) => {
   let cell = parseInt(e.target.id.replace("_", ""));

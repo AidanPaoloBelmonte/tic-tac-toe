@@ -21,8 +21,7 @@ function initializeBoard() {
   reset = () => {
     for (let l = 0; l < board.length; l++) {
       board[l] = 0;
-      cell.classList.remove("player");
-      cell.classList.remove("computer");
+      cell.classList.replace("cell");
     }
 
     boardFree = [0, 1, 2, 3, 4, 5, 6, 7, 8];
@@ -31,6 +30,9 @@ function initializeBoard() {
     return boardFree;
   };
   judge = () => {
+    let winner = 0;
+    const winning_cells = [];
+
     for (let l = 0; l < 3; l++) {
       // Horizontal Checks
       if (
@@ -38,7 +40,11 @@ function initializeBoard() {
         board[l * 3] == board[l * 3 + 2] &&
         board[l * 3] != 0
       ) {
-        return board[l * 3];
+        winning_cells.push(l * 3);
+        winning_cells.push(l * 3 + 1);
+        winning_cells.push(l * 3 + 2);
+
+        winner = board[l * 3];
       }
       // Vertical Checks
       else if (
@@ -46,7 +52,11 @@ function initializeBoard() {
         board[l] == board[l + 6] &&
         board[l] != 0
       ) {
-        return board[l];
+        winning_cells.push(l);
+        winning_cells.push(l + 3);
+        winning_cells.push(l + 6);
+
+        winner = board[l];
       }
       // Diagonal Checks
       else if (
@@ -55,11 +65,29 @@ function initializeBoard() {
         board[4] == board[8 + -l * 2] &&
         board[4] != 0
       ) {
-        return board[4];
+        winning_cells.push(4);
+        winning_cells.push(l * 2);
+        winning_cells.push(8 + -l * 2);
+
+        winner = board[4];
       }
     }
 
-    return 0;
+    if (winner > 0) {
+      for (let l = 0; l < boardDisplay.children.length; l++) {
+        if (!winning_cells.includes(l)) {
+          boardDisplay.children[l].classList.add("loser");
+        } else {
+          boardDisplay.children[l].classList.add("winner");
+        }
+      }
+    } else if (boardFree.length < 1) {
+      for (let l = 0; l < boardDisplay.children.length; l++) {
+        boardDisplay.children[l].classList.add("loser");
+      }
+    }
+
+    return winner;
   };
 
   return { getBoardCell, setBoardCell, reset, getFreeCells, judge };
@@ -75,7 +103,9 @@ function gameManager() {
     }
 
     board.setBoardCell(index, 1);
-    if (board.getFreeCells().length > 0) {
+    let judgement = board.judge();
+
+    if (board.getFreeCells().length > 0 && judgement == 0) {
       let computerMove =
         board.getFreeCells()[
           Math.floor(Math.random() * board.getFreeCells().length)
@@ -85,7 +115,10 @@ function gameManager() {
       isGameOver = true;
     }
 
-    let judgement = board.judge();
+    if (judgement == 0) {
+      judgement = board.judge();
+    }
+
     if (judgement > 0 || board.getFreeCells().length < 1) {
       isGameOver = true;
     }

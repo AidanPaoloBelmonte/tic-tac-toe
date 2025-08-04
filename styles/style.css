@@ -61,6 +61,16 @@ body {
     background-image: url("../images/alpha-x.svg");
 }
 
+.winner {
+    background-color: lightpink;
+    background-clip: padding-box;
+}
+
+.loser {
+    background-color: lightgray;
+    opacity: 20%;
+}
+
 #_0 {
     border-right: var(--board-border);
     border-bottom: var(--board-border);
